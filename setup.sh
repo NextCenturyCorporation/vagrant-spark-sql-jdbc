@@ -2,8 +2,10 @@
 export JAVA_HOME=/usr/local/java
 export HADOOP_PREFIX=/usr/local/hadoop
 HADOOP_ARCHIVE=hadoop-2.3.0.tar.gz
-JAVA_ARCHIVE=jdk-7u51-linux-x64.gz
+JAVA_ARCHIVE=jdk-7u60-linux-x64.gz
+SPARK_ARCHIVE=spark-1.1.0-bin-hadoop2.3.tgz
 HADOOP_MIRROR_DOWNLOAD=http://apache.mirror.quintex.com/hadoop/common/hadoop-2.3.0/hadoop-2.3.0.tar.gz
+SPARK_DOWNLOAD=http://archive.apache.org/dist/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.3.tgz
 	
 function fileExists {
 	FILE=/vagrant/resources/$1
@@ -20,6 +22,11 @@ function disableFirewall {
 	service iptables save
 	service iptables stop
 	chkconfig iptables off
+}
+
+function installHostsFile {
+    echo "installing /etc/hosts"
+    cp /vagrant/resources/hosts /etc/hosts
 }
 
 function installLocalJava {
@@ -43,6 +50,18 @@ function installRemoteHadoop {
 	echo "install hadoop from remote file"
 	curl -o /home/vagrant/hadoop-2.3.0.tar.gz -O -L $HADOOP_MIRROR_DOWNLOAD
 	tar -xzf /home/vagrant/hadoop-2.3.0.tar.gz -C /usr/local
+}
+
+function installLocalSpark {
+	echo "install spark from local file"
+	FILE=/vagrant/resources/$SPARK_ARCHIVE
+	tar -xzf $FILE -C /usr/local
+}
+
+function installRemoteSpark {
+	echo "install spark from remote file"
+	curl -o /home/vagrant/$SPARK_ARCHIVE -O -L $SPARK_DOWNLOAD
+	tar -xzf /home/vagrant/$SPARK_ARCHIVE -C /usr/local
 }
 
 function setupJava {
@@ -109,6 +128,14 @@ function startHadoopService {
 	service hadoop start
 }
 
+function installSpark {
+	if fileExists $SPARK_ARCHIVE; then
+		installLocalSpark
+	else
+		installRemoteSpark
+	fi
+}
+
 function installHadoop {
 	if fileExists $HADOOP_ARCHIVE; then
 		installLocalHadoop
@@ -131,8 +158,10 @@ function initHdfsTempDir {
 }
 
 disableFirewall
+installHostsFile
 installJava
 installHadoop
+installSpark
 setupJava
 setupHadoop
 setupEnvVars
