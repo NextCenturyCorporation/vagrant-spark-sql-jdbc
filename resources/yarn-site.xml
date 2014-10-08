@@ -33,6 +33,6 @@
  -->
  <property>
   <name>yarn.log.server.url</name>
-  <value>http://hadoop-yarn:19888/jobhistory/logs/</value>
+  <value>http://spark-sql-jdbc:19888/jobhistory/logs/</value>
  </property>
 </configuration>

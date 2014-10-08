@@ -19,6 +19,6 @@
 <configuration>
  <property>
   <name>fs.defaultFS</name>
-  <value>hdfs://hadoop-yarn</value>
+  <value>hdfs://spark-sql-jdbc</value>
  </property>
 </configuration>

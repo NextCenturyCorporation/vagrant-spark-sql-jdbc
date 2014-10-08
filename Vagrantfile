@@ -12,11 +12,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 			v.vmx["memsize"]  = "4096"
 		end
 		master.vm.provider "virtualbox" do |v|
-		  v.name = "hadoop-yarn"
+		  v.name = "spark-sql-jdbc"
 		  v.customize ["modifyvm", :id, "--memory", "4096"]
 		end
 		master.vm.network :private_network, ip: "192.168.34.10"
-		master.vm.hostname = "hadoop-yarn"
+		master.vm.hostname = "spark-sql-jdbc"
 		master.vm.provision :shell, :path=> 'setup.sh'
 	end
 end
