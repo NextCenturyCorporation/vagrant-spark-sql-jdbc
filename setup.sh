@@ -64,6 +64,23 @@ function installRemoteSpark {
 	tar -xzf /home/vagrant/$SPARK_ARCHIVE -C /usr/local
 }
 
+function setupSpark {
+	echo "setting up spark"
+	ln -s /usr/local/spark-1.1.0-bin-hadoop2.3 /usr/local/spark
+}
+
+function setupSparkThriftService {
+	echo "setting up spark sql thrift service"
+	cp -f /vagrant/resources/sparkthrift /etc/init.d/sparkthrift
+	chmod 777 /etc/init.d/sparkthrift
+	chkconfig --level 2345 sparkthrift on
+}
+
+function startSparkThriftService {
+	echo "starting spark sql thrift service"
+	service sparkthrift start
+}
+
 function setupJava {
 	echo "setting up java"
 	if fileExists $JAVA_ARCHIVE; then
@@ -168,4 +185,7 @@ setupEnvVars
 setupNameNode
 setupHadoopService
 startHadoopService
+setupSpark
+setupSparkThriftService
+startSparkThriftService
 initHdfsTempDir

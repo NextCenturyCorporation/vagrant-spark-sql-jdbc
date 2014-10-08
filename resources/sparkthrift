@@ -1,0 +1,46 @@
+#!/bin/bash
+# chkconfig: 2345 95 20
+# description: Spark SQL Thrift server
+# processname: sparkthrift
+SPARK_PREFIX=/usr/local/spark
+export HADOOP_CONF_DIR=${HADOOP_PREFIX}/etc/hadoop
+export JAVA_HOME=/usr/local/java
+
+function start {
+ echo "Starting spark sql thriftserver"
+ DATANUCLEUS_JARS=`ls $SPARK_PREFIX/lib/datanucleus-* | tr "\\n" ","`
+ mkdir $SPARK_PREFIX/logs
+ $SPARK_PREFIX/sbin/start-thriftserver.sh --jars $DATANUCLEUS_JARS --master yarn-client &> $SPARK_PREFIX/logs/thriftserver.log &
+}
+
+function stop {
+ echo "Stopping spark sql thriftserver not yet supported"
+ exit 1
+}
+
+function restart {
+ echo "Restarting spark sql thriftserver not yet supported"
+ exit 1
+ #echo "Restarting namenode, datanode, resourcemanager, nodemanager, proxyserver and historyserver"
+ #stop
+ #start
+}
+
+case "$1" in
+start)
+ start
+;;
+stop)
+ stop
+;;
+restart)
+ stop
+ start
+;;
+*)
+echo "Spark SQL Thrift server"
+echo $"Usage: $0 start"
+exit 1
+esac
+exit 0
+
