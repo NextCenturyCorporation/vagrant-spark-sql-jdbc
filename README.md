@@ -1,6 +1,6 @@
 # Introduction
 
-This Vagrant project creates a VM with single node setup of Hadoop v2.3.0 with YARN installed.
+This Vagrant project creates a VM with single node setup of Spark running the Spark SQL Thrift server.
 
 # Getting Started
 
@@ -16,28 +16,29 @@ Some gotcha's.
 
 1. Make sure you download Vagrant v1.4.3 or higher.
 2. Make sure when you clone this project, you preserve the Unix/OSX end-of-line (EOL) characters. The scripts will fail with Windows EOL characters.
-3. Make sure you have 8Gb of free memory for the VM. You may change the Vagrantfile to specify smaller memory requirements.
+3. Make sure you have 4Gb of free memory for the VM. You may change the Vagrantfile to specify larger or smaller memory requirements.
 4. This project has NOT been tested with the VMWare provider for Vagrant.
 5. You may change the script (setup.sh) to point to a different location for Hadoop to be downloaded from. Here is a list of mirrors: http://www.apache.org/dyn/closer.cgi/hadoop/common/.
 
 # Make the VM setup faster
-You can make the VM setup even faster if you pre-download the Hadoop and Oracle JDK into the /resources directory.
+You can make the VM setup even faster if you pre-download Hadoop, Spark, and Oracle JDK into the /resources directory.
 
 1. /resources/hadoop-2.3.0.tar.gz
-2. /resources/jdk-7u51-linux-x64.gz
+2. /resources/jdk-7u60-linux-x64.gz
+3. /resources/spark-1.1.0-bin-hadoop2.3.tgz
 
 The setup script will automatically detect if these files (with precisely the same names) exist and use them instead. If you are using slightly different versions, you will have to modify the script accordingly.
 
 # Web UI
 You can check the following URLs to monitor the Hadoop daemons.
 
-1. [NameNode] (http://localhost:50070/dfshealth.html)
-2. [DataNode] (http://localhost:50075/dataNodeHome.jsp)
-3. [ResourceManager] (http://localhost:8088/cluster)
-4. [NodeManager] (http://localhost:8042/node)
-5. [JobHistory] (http://localhost:19888/jobhistory)
+1. [NameNode] (http://192.168.34.10:50070/dfshealth.html)
+2. [DataNode] (http://192.168.34.10:50075/dataNodeHome.jsp)
+3. [ResourceManager] (http://192.168.34.10:8088/cluster)
+4. [NodeManager] (http://192.168.34.10:8042/node)
+5. [JobHistory] (http://192.168.34.10:19888/jobhistory)
 
-Note that you point your browser to "localhost" because when the VM is created, it is specified to perform port forwarding from your desktop to the VM.
+Note that you point your browser to "192.168.34.10" because when the VM is created, it creates a private network between the host and the VM.
 
 # Vagrant boxes
 A list of available Vagrant boxes is shown at http://www.vagrantbox.es. 
@@ -61,8 +62,10 @@ This project was kludge together with great pointers from all around the interne
 11. http://serverfault.com/questions/119869/turning-off-cp-copy-commands-interactive-mode-cp-overwrite 
 12. http://askubuntu.com/questions/45349/how-to-extract-files-to-another-directory-using-tar-command 
 
+This Spark SQL VM was built on top of Jee Vang's Hadoop VM: https://github.com/vangj/vagrant-hadoop-2.3.0
+
 # Copyright Stuff
-Copyright 2014 Jee Vang
+Copyright 2014 Jee Vang, Tom Panning
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
