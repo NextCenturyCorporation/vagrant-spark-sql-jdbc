@@ -9,7 +9,7 @@ export JAVA_HOME=/usr/local/java
 function start {
  echo "Starting spark sql thriftserver"
  DATANUCLEUS_JARS=`ls $SPARK_PREFIX/lib/datanucleus-* | tr "\\n" ","`
- mkdir $SPARK_PREFIX/logs
+ mkdir -p $SPARK_PREFIX/logs
  $SPARK_PREFIX/sbin/start-thriftserver.sh --jars $DATANUCLEUS_JARS --master yarn-client &> $SPARK_PREFIX/logs/thriftserver.log &
 }
 
