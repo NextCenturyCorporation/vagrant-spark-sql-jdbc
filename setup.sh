@@ -1,11 +1,13 @@
 #!/bin/bash
 export JAVA_HOME=/usr/local/java
 export HADOOP_PREFIX=/usr/local/hadoop
-HADOOP_ARCHIVE=hadoop-2.3.0.tar.gz
 JAVA_ARCHIVE=jdk-7u60-linux-x64.gz
-SPARK_ARCHIVE=spark-1.1.0-bin-hadoop2.3.tgz
-HADOOP_MIRROR_DOWNLOAD=http://apache.mirror.quintex.com/hadoop/common/hadoop-2.3.0/hadoop-2.3.0.tar.gz
-SPARK_DOWNLOAD=http://archive.apache.org/dist/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.3.tgz
+HADOOP_DIRNAME=hadoop-2.6.0
+HADOOP_ARCHIVE=$HADOOP_DIRNAME.tar.gz
+SPARK_DIRNAME=spark-1.2.1-bin-hadoop2.4
+SPARK_ARCHIVE=$SPARK_DIRNAME.tgz
+HADOOP_MIRROR_DOWNLOAD=http://psg.mtu.edu/pub/apache/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz
+SPARK_DOWNLOAD=http://archive.apache.org/dist/spark/spark-1.2.1/spark-1.2.1-bin-hadoop2.4.tgz
 	
 function fileExists {
 	FILE=/vagrant/resources/$1
@@ -48,8 +50,8 @@ function installLocalHadoop {
 
 function installRemoteHadoop {
 	echo "install hadoop from remote file"
-	curl -o /home/vagrant/hadoop-2.3.0.tar.gz -O -L $HADOOP_MIRROR_DOWNLOAD
-	tar -xzf /home/vagrant/hadoop-2.3.0.tar.gz -C /usr/local
+	curl -o /home/vagrant/$HADOOP_ARCHIVE -O -L $HADOOP_MIRROR_DOWNLOAD
+	tar -xzf /home/vagrant/$HADOOP_ARCHIVE -C /usr/local
 }
 
 function installLocalSpark {
@@ -66,7 +68,7 @@ function installRemoteSpark {
 
 function setupSpark {
 	echo "setting up spark"
-	ln -s /usr/local/spark-1.1.0-bin-hadoop2.3 /usr/local/spark
+	ln -s /usr/local/$SPARK_DIRNAME /usr/local/spark
 }
 
 function setupSparkThriftService {
@@ -95,7 +97,7 @@ function setupHadoop {
 	mkdir /tmp/hadoop-namenode
 	mkdir /tmp/hadoop-logs
 	mkdir /tmp/hadoop-datanode
-	ln -s /usr/local/hadoop-2.3.0 /usr/local/hadoop
+	ln -s /usr/local/$HADOOP_DIRNAME /usr/local/hadoop
 	echo "copying over hadoop configuration files"
 	cp -f /vagrant/resources/core-site.xml /usr/local/hadoop/etc/hadoop
 	cp -f /vagrant/resources/hdfs-site.xml /usr/local/hadoop/etc/hadoop
@@ -110,8 +112,8 @@ function setupHadoop {
 	chown -fR vagrant /tmp/hadoop-namenode
     chown -fR vagrant /tmp/hadoop-logs
     chown -fR vagrant /tmp/hadoop-datanode
-	mkdir /usr/local/hadoop-2.3.0/logs
-	chown -fR vagrant /usr/local/hadoop-2.3.0/logs
+	mkdir /usr/local/hadoop/logs
+	chown -fR vagrant /usr/local/hadoop/logs
 }
 
 function setupEnvVars {
@@ -137,7 +139,7 @@ function setupHadoopService {
 
 function setupNameNode {
 	echo "setting up namenode"
-	/usr/local/hadoop-2.3.0/bin/hdfs namenode -format myhadoop
+	/usr/local/hadoop/bin/hdfs namenode -format myhadoop
 }
 
 function startHadoopService {
